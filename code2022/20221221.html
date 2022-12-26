@@ -68,21 +68,8 @@
         </div>
 
 
-        <!-- 下拉選單(多選) -->
-        <div class="col-sm-6 mb-3">
-          <label class="form-label">下拉選單(多選)</label>
-          <select name="select_m" class="form-select" id="select_m" multiple>
-            <option value="下拉選單(多選)1">下拉選單(多選)1</option>
-            <option value="下拉選單(多選)2" selected>下拉選單(多選)2</option>
-            <option value="下拉選單(多選)3">下拉選單(多選)3</option>
-          </select>
-        </div>
 
-        <!-- 文字區域(多行) -->
-        <div class="col-sm-12 mb-3">
-          <label class="form-label">文字區域</label>
-          <textarea name="textarea" class="form-control" id="textarea" rows="5" required>文字區域123</textarea>
-        </div>
+
       </div>
 
 
@@ -206,7 +193,7 @@
           type: 'radio',
           name: 'radio',
           value: '',
-          valid: '', //required
+          valid: 'required', //required
           option: '雞腿|排骨|招牌',
           width: '6'
         },
@@ -218,7 +205,8 @@
           valid: 'required', //required
           option: '行政|訓導|總務',
           width: '3'
-        },{
+        },
+        {
           label: '地區',
           type: 'select_m',
           name: 'area',
@@ -226,15 +214,16 @@
           valid: 'required', //required
           option: '台南|高雄|屏東',
           width: '3'
-        },{
-          label: '留言',
-          type: 'text',
+        },
+        {
+          label: '詳細內容',
+          type: '段落',
           name: 'textarea',
-          value: '',
+          value: '123',
           valid: 'required', //required
           option: '',
-          width: '3'
-        }
+          width: '12'
+        },
       ];
       let form_item = document.getElementById('form_item');
       let form_item_html = options_html = '';
@@ -307,8 +296,11 @@
                ${options_html}
               </select>
             </div>`;
-
         }else if(stru[i]['type'] === 'select_m'){
+          // 1.首先替換 變數
+          // 2.將 stru[i]['option'] => 陣列 ['下拉選單1', '下拉選單2', '下拉選單3']
+          // 3.跑迴圈
+          // stru[i]['option'] => '行政|訓導|總務'
           options = stru[i]['option'].split('|');
           options_html = '';
           for(let j in options){
@@ -319,22 +311,19 @@
           form_item_html += `
             <div class="col-sm-${stru[i]['width']} mb-3">
               <label class="form-label">${stru[i]['label']}</label>
-              <select name="${stru[i]['name']}" class="form-select" id="${stru[i]['name']}" ${stru[i]['valid']} multiple>
+              <select name="${stru[i]['name']}" class="form-select" id="${stru[i]['name']}" ${stru[i]['valid']} multiple >
                ${options_html}
               </select>
             </div>`;
-        }else if(stru[i]['type'] === 'text'){
-          options_html = '';
-          for(let j in options){
-            options_html += `
-            <textarea name="${stru[i]['name']}" class="form-control" id="${stru[i]['name']}" rows="5" ${stru[i]['valid']}>文字區域123</textarea>`
-          }
+        }else if(stru[i]['type'] === '段落'){
+
           form_item_html += `
-          <div class="col-sm-${stru[i]['width']}mb-3">
-          <label class="form-label">${stru[i]['label']}</label>
-          ${options_html}
-          </div>`
+            <div class="col-sm-12${stru[i]['width']} mb-3">
+              <label class="form-label">${stru[i]['label']}</label>
+              <textarea name="${stru[i]['name']}" class="form-control" id="${stru[i]['name']}" rows="5" ${stru[i]['valid']}>${stru[i]['value']}</textarea>
+            </div>`;
         }
+
       }
       // console.log(form_item_html);
 
