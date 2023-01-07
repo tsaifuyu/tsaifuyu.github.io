@@ -1,15 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <!-- Bootstrap CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
+
   <!-- Option 1: Bootstrap Bundle with Popper -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ" crossorigin="anonymous"></script>
+
   <!-- jquery -->
   <script src="https://code.jquery.com/jquery-3.6.2.min.js" integrity="sha256-2krYZKh//PcchRtd+H+VyyQoZ/e3EcrkxhM8ycwASPA=" crossorigin="anonymous"></script>
+
   <title>表單</title>
   <style>
     input:invalid,
@@ -17,11 +22,13 @@
     textarea:invalid {
       box-shadow: 0 0 5px 1px red;
     }
+
     input:focus:invalid,
     select:focus:invalid,
     textarea:focus:invalid {
       outline: none;
     }
+
     .form-control:invalid {
       border-color: #dc3545;
       padding-right: calc(1.5em + 0.75rem);
@@ -32,37 +39,50 @@
     }
   </style>
 </head>
+
 <body>
+
+
   <!-- 資料處理時畫面 -->
   <div class="d-none my-5" id="show">
     <span>資料處理中....<img src="https://i.imgur.com/pm9SKUg.gif"></span>
   </div>
+
   <main class="container">
     <h1 class="text-center mt-3">繳費通知單</h1>
-    <form action="https://script.google.com/macros/s/AKfycbyzrOnYptO7-o5hNMrLAYoUwkve6dRjEQLqXyj5gBT4iSQbg1QlMaP0zmTtBEXbjUhScw/exec" class="" method="post">
+
+    <form action="" class="" method="post" id="myForm">
       <div class="row" id="form_item">
+
       </div>
       <input type="hidden" name="op" value="payment" id="op">
       <input type="hidden" name="callback_url" value="" id="callback_url">
+      <input type="hidden" name="callback_home_url" value="" id="callback_home_url">
       <button type="submit" class="btn btn-primary w-100" id="submit">送出</button>
     </form>
   </main>
+
   <script>
     window.onload = function() {
+
       let submitBtn = document.getElementById('submit');
       submitBtn.onclick = function() {
+
       }
+
       let box = document.querySelector('.container');
       box.insertAdjacentHTML("afterend", "<div class='text-center mt-3'>container寬度：" + box.clientWidth + "px</div>" + "<div class='text-center mt-3'>網頁可見區域寬：" + document.body.clientWidth + "px</div>");
+
       // 取得結構資料
       let url = 'https://script.google.com/macros/s/AKfycbyzrOnYptO7-o5hNMrLAYoUwkve6dRjEQLqXyj5gBT4iSQbg1QlMaP0zmTtBEXbjUhScw/exec';
 
-      //17
-      // let url = 'https://script.google.com/macros/s/AKfycbzJYXRQcIWxUjPPbFtxd8da3Q2bNZ2j9p4DROe67lVfjz_JLcJs_KzMN8ZMIaDliBJB/exec'
+      //設定表單 action
+      $('#myForm').prop('action', url);
 
       let data = {
         op: 'api_stru_payment'
       }
+
       $.ajax({
         url: url, // 請求資料的網址
         data: data, // 如果需要傳送資料時，則將資料設定在這裡
@@ -78,12 +98,21 @@
           let stru = result;
           // 產生表單語法
           create_template('form_item', stru);
+
           $("#date").prop({
             min: '2022-12-26',
             max: '2023-01-10'
           });
+
+          //表單網址
           let callback_url = document.getElementById('callback_url');
           callback_url.value = window.location.href;
+
+          //首頁網址
+          let callback_home_url = document.getElementById('callback_home_url');
+          let home_url = window.location.href;
+          callback_home_url.value = home_url.replace(window.location.pathname, '');
+
         },
         error: function(error) { // 當接收資料失敗時
           $("#show").prop("class", "d-none my-5");
@@ -91,16 +120,25 @@
           //......
         }
       });
+
+
+
+
     }
+
     // 樣版語法
     function create_template(target_id, stru) {
+
       // -----變成函數 create_template(target_id, stru)
+
       let form_item = document.getElementById(target_id);
       let form_item_html = options_html = '';
       let options;
       // let a = "123abc";
       // let c = "000"+ a +"qwe" ;
       // console.log(c);
+
+
       for (let i in stru) {
         if (stru[i]['type'] === 'text' ||
           stru[i]['type'] === 'url' ||
@@ -135,6 +173,7 @@
                 <label class="form-check-label" for="${stru[i]['name']}_${j}">${options[j]}</label>
               </div>`;
           };
+
           // console.log(options_html);
           //跑迴圈
           //選項html
@@ -143,6 +182,7 @@
               <label class="form-label w-100">${stru[i]['label']}</label>
               ${options_html}
             </div>`;
+
         } else if (stru[i]['type'] === 'select') {
           // 1.首先替換 變數
           // 2.將 stru[i]['option'] => 陣列 ['下拉選單1', '下拉選單2', '下拉選單3']
@@ -154,6 +194,7 @@
             options_html += `
               <option value="${options[j]}">${options[j]}</option>`;
           }
+
           form_item_html += `
             <div class="col-sm-${stru[i]['width']} mb-3">
               <label class="form-label">${stru[i]['label']}</label>
@@ -172,6 +213,7 @@
             options_html += `
               <option value="${options[j]}">${options[j]}</option>`;
           }
+
           form_item_html += `
             <div class="col-sm-${stru[i]['width']} mb-3">
               <label class="form-label">${stru[i]['label']}</label>
@@ -180,6 +222,7 @@
               </select>
             </div>`;
         } else if (stru[i]['type'] === '段落') {
+
           form_item_html += `
             <div class="col-sm-${stru[i]['width']} mb-3">
               <label class="form-label">${stru[i]['label']}</label>
@@ -190,6 +233,7 @@
           options_html = '';
           //三元運算
           let required = stru[i]['valid'] ? `oninput="renderCheckbox('${stru[i]['name']}')"` : '';
+
           for (let j in options) {
             options_html += `
               <div class="form-check form-check-inline">
@@ -197,6 +241,7 @@
                 <label class="form-check-label" for="${stru[i]['name']}_${j}">${options[j]}</label>
               </div>`;
           };
+
           form_item_html += `
             <div class="col-sm-${stru[i]['width']} mb-3">
               <label class="form-label w-100">${stru[i]['label']}</label>
@@ -206,14 +251,22 @@
           form_item_html += `
             <input type="hidden" name="${stru[i]['name']}" value="${stru[i]['value']}" id="${stru[i]['name']}">`;
         }
+
       }
       form_item.innerHTML = form_item_html;
+
+
+
+
       // dom ->
       // $("#date").prop('min','2022-12-26');
       // $("#date").prop('max','2022-12-31');
       // val()
+
       //----------------------------------------結束
+
     }
+
     /*
       渲染畫面
     */
@@ -224,15 +277,18 @@
         setRequired(name);
       }
     }
+
     /*
       判斷是否有勾選
     */
     function isAtLeastOneChecked(name) {
       let checkboxes = Array.from(document.getElementsByName(name));
+
       return checkboxes.some(function(item) {
         return item.checked;
       });
     }
+
     /*=============================
       設定屬性 required
     ===============================*/
@@ -242,6 +298,7 @@
         checkboxes[i].setAttribute('required', true);
       }
     }
+
     /*=============================
       移除屬性 required
     ===============================*/
@@ -253,4 +310,5 @@
     }
   </script>
 </body>
+
 </html>
